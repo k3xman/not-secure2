@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Login (BAD SECURITY DEMO)";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="alert alert-danger">
+                <h4><i class="bi bi-exclamation-triangle"></i> WARNING: BAD SECURITY PRACTICES</h4>
+                <p>This login form demonstrates intentionally bad security practices for educational purposes only.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="bi bi-box-arrow-in-right"></i> Login (Vulnerable)</h2>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter username..." required />
+                            <small class="text-muted">BAD: No input validation - SQL injection vulnerable</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter password..." required />
+                            <small class="text-muted">BAD: Will be compared with MD5 hash</small>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h6><i class="bi bi-info-circle"></i> Security Issues in This Login:</h6>
+                            <ul class="mb-0">
+                                <li>SQL injection vulnerability in authentication</li>
+                                <li>MD5 password hashing (cryptographically broken)</li>
+                                <li>No salt used in password verification</li>
+                                <li>Simple string comparison (timing attacks possible)</li>
+                                <li>No rate limiting or account lockout</li>
+                                <li>Poor session management</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Users
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6><i class="bi bi-bug"></i> SQL Injection Test Examples</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">Try these malicious inputs to test SQL injection:</p>
+                    <ul class="mb-0">
+                        <li><strong>Username:</strong> <code>' OR '1'='1</code> (bypass authentication)</li>
+                        <li><strong>Username:</strong> <code>admin' --</code> (comment out password check)</li>
+                        <li><strong>Username:</strong> <code>'; DROP TABLE Users; --</code> (delete table)</li>
+                        <li><strong>Username:</strong> <code>' UNION SELECT 1,2,3,4,5,6 --</code> (union attack)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

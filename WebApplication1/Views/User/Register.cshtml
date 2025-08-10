@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Register User (BAD SECURITY DEMO)";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="alert alert-danger">
+                <h4><i class="bi bi-exclamation-triangle"></i> WARNING: BAD SECURITY PRACTICES</h4>
+                <p>This registration form demonstrates intentionally bad security practices for educational purposes only.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="bi bi-person-plus"></i> Register New User (Vulnerable)</h2>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    <form asp-action="Register" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter username..." required />
+                            <small class="text-muted">BAD: No input validation or sanitization</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter password..." required />
+                            <small class="text-muted">BAD: Will be hashed with MD5 (cryptographically broken)</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter email..." required />
+                            <small class="text-muted">BAD: No email validation</small>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <h6><i class="bi bi-info-circle"></i> Security Issues in This Form:</h6>
+                            <ul class="mb-0">
+                                <li>No input validation or sanitization</li>
+                                <li>Passwords hashed with MD5 (broken algorithm)</li>
+                                <li>No salt used in password hashing</li>
+                                <li>SQL injection vulnerability in database operations</li>
+                                <li>No rate limiting or CAPTCHA</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Users
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus"></i> Register User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

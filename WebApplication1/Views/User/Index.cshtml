@@ -1,0 +1,148 @@
+@model IEnumerable<WebApplication1.Models.User>
+
+@{
+    ViewData["Title"] = "User Management (BAD SECURITY DEMO)";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-danger">
+                <h4><i class="bi bi-exclamation-triangle"></i> WARNING: BAD SECURITY PRACTICES DEMONSTRATION</h4>
+                <p>This page demonstrates intentionally bad security practices for educational purposes only. 
+                In a real application, you should NEVER expose passwords or use these techniques!</p>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>User Management (Vulnerable)</h1>
+                <div>
+                    <a asp-action="Register" class="btn btn-primary me-2">
+                        <i class="bi bi-person-plus"></i> Register New User
+                    </a>
+                    <a asp-action="Login" class="btn btn-outline-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </div>
+            </div>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            <!-- BAD PRACTICE: Search form vulnerable to SQL injection -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-search"></i> Search Users (SQL Injection Vulnerable)</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Search" method="get" class="row g-3">
+                        <div class="col-md-8">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Enter username or email to search..." />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-search"></i> Search (Vulnerable)
+                            </button>
+                        </div>
+                    </form>
+                    <small class="text-muted">Try SQL injection: <code>' OR '1'='1</code> or <code>'; DROP TABLE Users; --</code></small>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> No users found.
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-people"></i> All Users (Passwords Exposed - BAD!)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Password (MD5 Hash - BAD!)</th>
+                                        <th>Created</th>
+                                        <th>Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model)
+                                    {
+                                        <tr>
+                                            <td>@user.Id</td>
+                                            <td>
+                                                <a asp-action="Details" asp-route-username="@user.Username" class="text-decoration-none">
+                                                    @user.Username
+                                                </a>
+                                            </td>
+                                            <td>@user.Email</td>
+                                            <td>
+                                                <code class="text-danger">@user.Password</code>
+                                                <br>
+                                                <small class="text-muted">(MD5 hash - cryptographically broken!)</small>
+                                            </td>
+                                            <td>@user.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Inactive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <form asp-action="Delete" method="post" class="d-inline">
+                                                    <input type="hidden" name="username" value="@user.Username" />
+                                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                                            onclick="return confirm('Are you sure you want to delete user @user.Username?')">
+                                                        <i class="bi bi-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .table code {
+        font-size: 0.8em;
+        word-break: break-all;
+    }
+</style> 
