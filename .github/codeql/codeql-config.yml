@@ -1,0 +1,61 @@
+name: "CodeQL Config for Security Demo"
+
+# This configuration file is for educational purposes
+# It's designed to detect the intentionally bad security practices in this demo
+
+queries:
+  # Use the extended security query suite
+  - uses: security-extended
+  
+  # Include additional queries for common vulnerabilities
+  - uses: security-and-quality
+  
+  # Custom queries for educational purposes
+  - uses: ./queries
+
+paths:
+  # Include all C# files
+  - "**/*.cs"
+  # Include Razor views
+  - "**/*.cshtml"
+  # Include configuration files
+  - "**/*.json"
+  - "**/*.xml"
+
+paths-ignore:
+  # Exclude generated files
+  - "**/bin/**"
+  - "**/obj/**"
+  - "**/node_modules/**"
+  - "**/.vs/**"
+  - "**/.git/**"
+
+# Disable certain queries that might generate too many alerts for educational purposes
+# You can uncomment these if you want to focus on specific vulnerability types
+# disabled-queries:
+#   - cpp/unsafe-strcat
+#   - cpp/unsafe-strcpy
+
+# Configure query filters for educational purposes
+query-filters:
+  # Focus on high and critical severity issues
+  - include:
+      tags contain: security
+      severity: error
+  - include:
+      tags contain: security
+      severity: warning
+  # Include SQL injection specific queries
+  - include:
+      tags contain: sql-injection
+  # Include authentication and authorization issues
+  - include:
+      tags contain: authentication
+  - include:
+      tags contain: authorization
+  # Include password security issues
+  - include:
+      tags contain: password
+  # Include input validation issues
+  - include:
+      tags contain: input-validation 
