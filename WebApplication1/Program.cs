@@ -16,9 +16,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Add DbContext with PostgreSQL using the connection string from Aspire
+// Add DbContext with SQL Server using the connection string from Aspire
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("db")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("db")));
 
 // BAD: Register the vulnerable security service
 builder.Services.AddScoped<BadSecurityService>();

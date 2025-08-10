@@ -2,11 +2,12 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add a PostgreSQL database resource named "db"
-var db = builder.AddPostgres("db")
-    .WithDataVolume("data1")
-    .WithPgAdmin()
+
+// Add a SQL Server database resource named "db"
+var server = builder.AddSqlServer("sql")
     .WithLifetime(ContainerLifetime.Persistent);
+
+var db = server.AddDatabase("db");
 
 // Inject the connection string into WebApplication1
 builder.AddProject<Projects.WebApplication1>("webapplication1")

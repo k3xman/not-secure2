@@ -1,7 +1,7 @@
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
-using Npgsql;
+using Microsoft.Data.SqlClient;
 using WebApplication1.Models;
 
 namespace WebApplication1.Services;
@@ -20,10 +20,10 @@ public class BadSecurityService
     // BAD PRACTICE 1: SQL Injection vulnerability
     public User? GetUserByUsername(string username)
     {
-        string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM users WHERE Username = '{username}'";
+        string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM Users WHERE Username = '{username}'";
 
-        using var connection = new NpgsqlConnection(_connectionString);
-        using var command = new NpgsqlCommand(sql, connection);
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
 
         try
         {
@@ -54,12 +54,12 @@ public class BadSecurityService
     // BAD PRACTICE 2: Another SQL Injection vulnerability
     public List<User> SearchUsers(string searchTerm)
     {
-        string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM users WHERE Username LIKE '%{searchTerm}%' OR Email LIKE '%{searchTerm}%'";
+        string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM Users WHERE Username LIKE '%{searchTerm}%' OR Email LIKE '%{searchTerm}%'";
 
         var users = new List<User>();
 
-        using var connection = new NpgsqlConnection(_connectionString);
-        using var command = new NpgsqlCommand(sql, connection);
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
 
         try
         {
@@ -100,11 +100,11 @@ public class BadSecurityService
     public bool CreateUser(string username, string password, string email)
     {
         string hashedPassword = HashPassword(password);
-        // Use NOW() for PostgreSQL instead of GETDATE()
-        string sql = $"INSERT INTO users (Username, Password, Email, CreatedAt, IsActive) VALUES ('{username}', '{hashedPassword}', '{email}', NOW(), true)";
+        // Use GETDATE() for SQL Server
+        string sql = $"INSERT INTO Users (Username, Password, Email, CreatedAt, IsActive) VALUES ('{username}', '{hashedPassword}', '{email}', GETDATE(), 1)";
 
-        using var connection = new NpgsqlConnection(_connectionString);
-        using var command = new NpgsqlCommand(sql, connection);
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
 
         try
         {
@@ -130,10 +130,10 @@ public class BadSecurityService
     // BAD PRACTICE 6: Deleting user with SQL injection
     public bool DeleteUser(string username)
     {
-        string sql = $"DELETE FROM users WHERE Username = '{username}'";
+        string sql = $"DELETE FROM Users WHERE Username = '{username}'";
 
-        using var connection = new NpgsqlConnection(_connectionString);
-        using var command = new NpgsqlCommand(sql, connection);
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
 
         try
         {
@@ -150,12 +150,12 @@ public class BadSecurityService
     // BAD PRACTICE 7: Getting all users with passwords exposed
     public List<User> GetAllUsers()
     {
-        string sql = "SELECT \"Id\", \"Username\", Password, Email, CreatedAt, IsActive FROM users";
+        string sql = "SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM Users";
 
         var users = new List<User>();
 
-        using var connection = new NpgsqlConnection(_connectionString);
-        using var command = new NpgsqlCommand(sql, connection);
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
 
         try
         {

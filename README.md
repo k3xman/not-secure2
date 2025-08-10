@@ -1,6 +1,6 @@
 # Todo Application (Security Demo)
 
-A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, featuring PostgreSQL database integration. **This application intentionally demonstrates bad security practices for educational purposes.**
+A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, featuring SQL Server database integration. **This application intentionally demonstrates bad security practices for educational purposes.**
 
 ## ⚠️ SECURITY WARNING
 
@@ -14,7 +14,7 @@ A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, feat
 - Delete todo items
 - View all todo items with creation and completion timestamps
 - Responsive Bootstrap UI with Bootstrap Icons
-- PostgreSQL database integration via Microsoft Aspire
+- SQL Server database integration via Microsoft Aspire
 
 ### 🚨 Vulnerable User Management (Educational Demo)
 - **SQL Injection vulnerabilities** in all database operations
@@ -29,12 +29,12 @@ A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, feat
 
 - **AppHost1**: Microsoft Aspire Application Host that orchestrates the distributed application
 - **WebApplication1**: ASP.NET Core MVC web application with Entity Framework Core
-- **Database**: PostgreSQL database managed by Aspire
+- **Database**: SQL Server database managed by Aspire
 
 ## Prerequisites
 
 - .NET 9.0 SDK
-- Docker (for running PostgreSQL container)
+- Docker (for running SQL Server container)
 
 ## Running the Application
 
@@ -51,7 +51,7 @@ A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, feat
    ```
 
    This will:
-   - Start a PostgreSQL database container
+   - Start a SQL Server database container
    - Launch the web application
    - Open the Aspire dashboard in your browser
 
@@ -120,12 +120,12 @@ A simple Todo application built with ASP.NET Core 9.0 and Microsoft Aspire, feat
 
 ## Development
 
-The application automatically creates the database and tables on first run using `context.Database.EnsureCreated()`.
+The application automatically creates the database and tables on first run using `context.Database.Migrate()`.
 
 ## Technologies Used
 
 - **Backend**: ASP.NET Core 9.0, Entity Framework Core
-- **Database**: PostgreSQL with Npgsql
+- **Database**: SQL Server with Microsoft.Data.SqlClient
 - **Frontend**: Bootstrap 5, Bootstrap Icons
 - **Orchestration**: Microsoft Aspire
 - **Container**: Docker
