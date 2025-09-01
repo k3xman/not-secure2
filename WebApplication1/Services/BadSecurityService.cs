@@ -17,7 +17,26 @@ public class BadSecurityService
         _connectionString = configuration.GetConnectionString("db") ?? string.Empty;
     }
 
+    // BAD PRACTICE 8: Directly executing raw SQL from user input (EXTREMELY DANGEROUS)
+    // Example exploit: ExecuteRawSql("DROP TABLE Users; --")
+    public int ExecuteRawSql(string sql)
+    {
+        // This method is for educational demonstration ONLY!
+        using var connection = new SqlConnection(_connectionString);
+        using var command = new SqlCommand(sql, connection);
+        try
+        {
+            connection.Open();
+            return command.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Raw SQL execution error: {ex.Message}");
+        }
+    }
+
     // BAD PRACTICE 1: SQL Injection vulnerability
+    // Example exploit: username = "' OR 1=1 --"
     public User? GetUserByUsername(string username)
     {
         string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM Users WHERE Username = '{username}'";
@@ -52,6 +71,7 @@ public class BadSecurityService
     }
 
     // BAD PRACTICE 2: Another SQL Injection vulnerability
+    // Example exploit: searchTerm = "%' OR 1=1 --"
     public List<User> SearchUsers(string searchTerm)
     {
         string sql = $"SELECT Id, Username, Password, Email, CreatedAt, IsActive FROM Users WHERE Username LIKE '%{searchTerm}%' OR Email LIKE '%{searchTerm}%'";
@@ -128,6 +148,7 @@ public class BadSecurityService
     }
 
     // BAD PRACTICE 6: Deleting user with SQL injection
+    // Example exploit: username = "' OR 1=1 --"
     public bool DeleteUser(string username)
     {
         string sql = $"DELETE FROM Users WHERE Username = '{username}'";
